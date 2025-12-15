@@ -59,7 +59,7 @@ void FLoadGlobals()
 				}
 
 				if(szBuf[i] == ' ')
-					for(cch = 0;cch < cchcmd;cch++)
+					for(cch = 0;cch < cchcmdlen;cch++)
 						if(!strnicmp(rgbcmd[cch].szName, szBuf, i))
 							rgbcmd[cch].pdmcp(szBuf, sz, sizeof(sz), NULL); // The ini settings is basically just a list of commands to execute
 

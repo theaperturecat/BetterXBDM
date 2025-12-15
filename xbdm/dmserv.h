@@ -149,7 +149,9 @@ typedef struct _DMCR
 
 extern char *rgszDumpMode[];
 extern DMCMD rgbcmd[];
-extern int cchcmd;
+//extern int cchcmd;
+extern int cchcmdlen;
+extern int cchcmdmax;
 extern DMREG rgbregs[];
 extern int cchregs;
 

@@ -50,6 +50,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Xbox 360'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>2010-01</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -102,6 +103,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>imp/;$(IncludePath)</IncludePath>
     <OutputFile>$(OutDir)$(TargetName).dll</OutputFile>
+    <ImageXexOutput>$(OutDir)$(ProjectName).xex</ImageXexOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Xbox 360'">
     <LinkIncremental>false</LinkIncremental>
@@ -325,12 +327,10 @@
   <ItemGroup>
     <None Include="dm.def" />
     <None Include="kd.txt" />
-    <None Include="readme.txt" />
     <None Include="xex.xml" />
     <None Include="xexd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="coz.c" />
     <ClCompile Include="dmbreak.c" />
     <ClCompile Include="dmexports.c" />
     <ClCompile Include="dmmain.c" />
@@ -341,7 +341,6 @@
     <ClCompile Include="ini.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coz.h" />
     <ClInclude Include="dmbreak.h" />
     <ClInclude Include="dmexports.h" />
     <ClInclude Include="dmglobals.h" />

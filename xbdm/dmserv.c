@@ -505,14 +505,14 @@ VOID DoReadWrite(PDMCONN pdmc, BOOL bCanRead)
 			}
 
 			// Find the command name
-			for(i = 0;(pdmc->szRecv[i]) && (pdmc->szRecv[i] != '\r') && (pdmc->szRecv[i] != '\n') && (pdmc->szRecv[i] != ' ');i++)
+			for(i = 0;(pdmc->szRecv[i]) && (pdmc->szRecv[i] != '\r') && (pdmc->szRecv[i] != '\n') /* && (pdmc->szRecv[i] != ' ') */ ; i++)
 				sz[i] = pdmc->szRecv[i];
 			sz[i] = 0;
 
 			// Now we just walk the list with our super inefficient algo of BRUTE FORCE SEARCHING
-			for(j = 0;j < cchcmd && stricmp(sz, rgbcmd[j].szName);j++);
+			for(j = 0;j < cchcmdlen && (strlen(sz) < strlen(rgbcmd[j].szName) || (strnicmp(sz, rgbcmd[j].szName, strlen(rgbcmd[j].szName))!=0));j++);
 
-			if(j == cchcmd) // Command not found
+			if(j == cchcmdlen) // Command not found
 			{
 				SendHrSzResp(pdmc->s, XBDM_INVALIDCMD, SzStdResponse(XBDM_INVALIDCMD), sz);
 
@@ -530,9 +530,9 @@ VOID DoReadWrite(PDMCONN pdmc, BOOL bCanRead)
 			{
 				// Command foundzorz
 
-				// Copy the whole string over
-				for(i = 0;(pdmc->szRecv[i] != '\r') && (pdmc->szRecv[i] != '\n');i++)
-					sz[i] = pdmc->szRecv[i];
+				// Copy the whole string over - not needed we do this anyway now
+				//for(i = 0;(pdmc->szRecv[i] != '\r') && (pdmc->szRecv[i] != '\n');i++)
+				//	sz[i] = pdmc->szRecv[i];
 				
 				sz[i] = 0;
 				resp[0] = 0;
@@ -1101,7 +1101,7 @@ DMHRAPI HrDrivemap(LPCSTR szCommand, LPSTR szResponse,
 
 DMHRAPI HrReportHelpInfo(PDM_CMDCONT pdmcc, LPSTR szResponse, DWORD cchResponse)
 {
-	if((int)pdmcd->cch >= cchcmd)
+	if((int)pdmcd->cch >= cchcmdlen)
 		return XBDM_ENDOFLIST;
 
 	strcpy_s((char*)pdmcc->Buffer, pdmcc->BufferSize, rgbcmd[pdmcd->cch].szName);
@@ -2630,7 +2630,7 @@ DMHRAPI HrObjList(LPCSTR szCommand, LPSTR szResponse,
 
 	pdmc = CONTAINING_RECORD(pdmcc, DMCONN, dmcc);
 
-	DumpAllObjects("\\", pdmc->s);
+	//DumpAllObjects("\\", pdmc->s); theaperturecat
 
 	return XBDM_NOERR;
 }
@@ -3561,7 +3561,7 @@ DMHRAPI HrWhoMadeThis(LPCSTR szCommand, LPSTR szResponse,
 #define DMPL_PRIV_MANAGE For managing the console (must have this to edit accounts!!!)
 #define DMPL_PRIV_HVX For ANYTHING that has to do with the hypervisor expansion(s)
 */
-DMCMD rgbcmd[] =
+DMCMD rgbcmd[100] =
 {
 	{ "altaddr",				DMPL_PRIV_READ,						HrGetAltAddr			}, // Gets the title ip address
 	{ "break",					DMPL_PRIV_CONTROL,					HrBreak					}, // Manages breakpoints
@@ -3626,5 +3626,9 @@ DMCMD rgbcmd[] =
 	{ "xexfield",				DMPL_PRIV_CONTROL,					HrGetXexField			}, // Gets an xex field
 	{ "walkmem",				DMPL_PRIV_CONTROL,					HrWalkMemory			}, // Lists memory and protection pages
 	{ "whomadethis",			DMPL_PRIV_CONTROL,					HrWhoMadeThis			}, // Guess who
+	{ "BetterXBDM",				0,									HrHelp					}, // Hleeoeoeoeoeo
 };
-int cchcmd = (sizeof(rgbcmd) / sizeof(DMCMD));
+//int cchcmd = 64;//(sizeof(rgbcmd) / sizeof(DMCMD));
+int cchcmdlen = 64;//(sizeof(rgbcmd) / sizeof(DMCMD));//Changes with modules
+
+int cchcmdmax = (sizeof(rgbcmd) / sizeof(DMCMD));//Changes with modules
